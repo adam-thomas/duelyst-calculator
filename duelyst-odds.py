@@ -94,7 +94,11 @@ def main():
     singleton_str = input("Is the deck singleton? (y/N)\n> ")
     singleton = (singleton_str == "y") or (singleton_str == "Y")
 
-    copies = int(input("How many copies of this card are in the deck?\n> "))
+    if not singleton:
+        copies = int(input("How many copies of this card are in the deck?\n> "))
+    else:
+        copies = 1
+
     target_turn = int(input("Which turn do you want to play the card on?\n> "))
 
     simulator = DuelystDrawSimulator(total_cards, singleton, copies, target_turn, verbose=verbose)
