@@ -2,6 +2,8 @@
 
 Quick odds calculator for Duelyst.
 
+Requires Python 3.5+.
+
 ### Usage
 
 ```
