@@ -4,10 +4,11 @@ import argparse
 AVG_NON_SINGLETON_COPIES = 2.5
 
 class DuelystDrawSimulator:
-    def __init__(self, total_cards, singleton, copies, target_turn, *, verbose=False):
+    def __init__(self, total_cards, singleton, copies, target_turn, draws_per_turn, *, verbose=False):
         self.total_cards = total_cards
         self.copies = copies
         self.target_turn = target_turn
+        self.draws_per_turn = draws_per_turn
         self.verbose = verbose
 
         # Replaces in Duelyst can't draw the same card again, so we need some estimation
@@ -57,8 +58,10 @@ class DuelystDrawSimulator:
         for i in range(1, self.target_turn):
             if self.verbose:
                 print(F"Turn {i}:")
+
             self.replace()
-            self.draw()
+            for j in range(0, self.draws_per_turn):
+                self.draw()
 
         # On the target turn, we only get a replace.
         if self.verbose:
@@ -87,11 +90,11 @@ def main():
     args = parser.parse_args()
     verbose = vars(args).get("verbose", False)
 
-    trial_str = input("Does the deck contain a Trial card? (y/N)\n> ")
+    trial_str = input("Does the deck contain a Trial card? (y/n)\n> ")
     trial = (trial_str == "y") or (trial_str == "Y")
     total_cards = 39 if trial else 40
 
-    singleton_str = input("Is the deck singleton? (y/N)\n> ")
+    singleton_str = input("Is the deck singleton? (y/n)\n> ")
     singleton = (singleton_str == "y") or (singleton_str == "Y")
 
     if not singleton:
@@ -100,8 +103,18 @@ def main():
         copies = 1
 
     target_turn = int(input("Which turn do you want to play the card on?\n> "))
+    draws_str = input("Do you want to use 2-draw? (y/n)\n> ")
+    two_draw = (draws_str == "y") or (draws_str == "Y")
+    draws_per_turn = 2 if two_draw else 1
 
-    simulator = DuelystDrawSimulator(total_cards, singleton, copies, target_turn, verbose=verbose)
+    simulator = DuelystDrawSimulator(
+        total_cards,
+        singleton,
+        copies,
+        target_turn,
+        draws_per_turn,
+        verbose=verbose
+    )
     success_chance = simulator.run()
 
     percentage = success_chance * 100
