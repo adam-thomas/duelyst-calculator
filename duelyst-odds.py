@@ -90,9 +90,7 @@ def main():
     args = parser.parse_args()
     verbose = vars(args).get("verbose", False)
 
-    trial_str = input("Does the deck contain a Trial card? (y/n)\n> ")
-    trial = (trial_str == "y") or (trial_str == "Y")
-    total_cards = 39 if trial else 40
+    total_cards = int(input("How many cards are in the deck? (y/n)\n> "))
 
     singleton_str = input("Is the deck singleton? (y/n)\n> ")
     singleton = (singleton_str == "y") or (singleton_str == "Y")
